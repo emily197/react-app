@@ -1,7 +1,6 @@
-// components/MovieTable.jsx
 import { useEffect, useState } from 'react';
 import { getMarvel } from '../helpers/getMarvel';
-import { MarvelItem } from './MarvelItem';
+import { MarvelItem } from '../components/MarvelItem';
 
 export const MarvelGrid = () => {
   const [movies, setMovies] = useState([]);
@@ -39,5 +38,3 @@ export const MarvelGrid = () => {
     </div>
   );
 };
-
-

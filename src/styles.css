@@ -1,0 +1,8 @@
+.sidebar {
+  min-height: 100vh;
+  height: 100%;
+  position: sticky;
+  top: 0;
+  box-shadow: 2px 0 8px rgba(0,0,0,0.08);
+  z-index: 100;
+}
