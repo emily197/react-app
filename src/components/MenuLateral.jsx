@@ -1,11 +1,9 @@
 import { Link } from 'react-router-dom';
-
           
 export const MenuLateral = () => {
 
   return (
     <>    
-
         <ul className="nav flex-column py-4">
           <li className="nav-item">
             <Link to="/" className="nav-link text-light" aria-current="page">
@@ -25,6 +23,12 @@ export const MenuLateral = () => {
           <li className="nav-item">
             <Link to="/pomodoro" className="nav-link text-light" aria-current="page">
               Pomodoro
+            </Link>
+          </li>
+
+          <li className="nav-item">
+            <Link to="/tienda" className="nav-link text-light" aria-current="page">
+              Tienda
             </Link>
           </li>
         </ul>

@@ -5,7 +5,6 @@ export class MoviesItemLikeClass extends Component {
     const { data, onVote } = this.props; //los prop que recibi del padre
     
     return (
-
       <>
         <div className="col-sm-3 m-2">
           <div className="card text-center">
@@ -27,7 +26,6 @@ export class MoviesItemLikeClass extends Component {
           </div>
         </div>
       </>
-
     );
   }
 }

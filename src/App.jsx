@@ -5,6 +5,8 @@ import { HomeApp } from './pages/HomeApp';
 import { MarvelGrid } from './pages/MarvelPage';
 import { Likes } from './pages/LikesPage';
 import { PomodoroPage } from './pages/PomodoroPage';
+import { HomeTienda } from './pages/HomeTienda';
+import { ProductDetail } from './components/catalogo-prod/ProductDetail';
 
 function App() {
   return (
@@ -15,10 +17,11 @@ function App() {
         <Route path="movies" element={<MarvelGrid/>} />
         <Route path="likes" element={<Likes />} />
         <Route path="pomodoro" element={<PomodoroPage />} />
+        <Route path="tienda" element={<HomeTienda />} />
+        <Route path="tienda/:slug" element={<ProductDetail />} />
       </Route>
     </Routes>
   );
 }
-
 
 export default App;

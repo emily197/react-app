@@ -1,6 +1,5 @@
 .jumbotron-bg {
   position: relative;
-  background-image: url('/images/react.jpeg'); /* Reemplaza con la URL de tu imagen */
   background-size: cover;
   background-position: center;
   min-height: 320px;
