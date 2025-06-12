@@ -31,6 +31,13 @@ export const MenuLateral = () => {
               Tienda
             </Link>
           </li>
+
+          <li className="nav-item">
+            <Link to="/formulario" className="nav-link text-light" aria-current="page">
+              Formulario
+            </Link>
+          </li>
+
         </ul>
 
     </>

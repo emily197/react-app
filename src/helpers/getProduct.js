@@ -1,5 +1,4 @@
-export const getProduct = async () => {
-  const products = [
+let products = [
     {
       id: "12",
       name: "Vitaminas Erbology1111",
@@ -196,7 +195,9 @@ export const getProduct = async () => {
       unit: "kg",
       isActive: true
     }
-  ];
+];
+
+export const getProduct = async () => {
 
   return new Promise((resolve) => {
     setTimeout(() => {
@@ -204,3 +205,14 @@ export const getProduct = async () => {
     }, 200);
   });
 }
+
+export const postProduct = async (product) => {
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      product.id = Date.now().toString();
+      products.push(product);
+      resolve(product);
+    }, 200);
+  });
+}
+

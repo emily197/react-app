@@ -8,6 +8,7 @@ export const ProductDetail = () => {
   const {slug} = useParams();
   const [product, setProduct] = useState(null);
 
+
   useEffect(() => {
     const fetchProduct = async () => {
       const products = await getProduct();
@@ -23,6 +24,7 @@ export const ProductDetail = () => {
       <h4>Producto no encontrado 404</h4>
     );
   }
+
   return (
   <div className="container py-5">
   <div className="row g-4">
