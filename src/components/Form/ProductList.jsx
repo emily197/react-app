@@ -1,92 +1,50 @@
-import { useEffect, useState } from "react";
-import { getProduct, deleteProduct } from "../../helpers/getProduct";
-import { Link, useNavigate } from 'react-router-dom';
-
+import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchProducts, removeProduct } from "../../store/productsSlice";
+import { useNavigate } from "react-router-dom";
 
 export const ProductList = () => {
-  const [products, setProducts] = useState([]);
+  const dispatch = useDispatch();
   const navigate = useNavigate();
-
-  const fetchProducts = async () => {
-    try {
-        const data = await getProduct();
-        setProducts(data);
-        console.log(data);
-    } catch (error) {
-        setProducts([]);
-        console.error("Error fetching products", error);
-      }
-  };
+  const { items: products, loading } = useSelector(state => state.products);
 
   useEffect(() => {
-    fetchProducts();
-  }, []);
+    dispatch(fetchProducts());
+  }, [dispatch]);
 
-
-  const editProduct = (prod) => {
-    navigate(`/formulario/${prod.id}`);
-  }
-
-  const destroyProduct = async (id) => {
+  const handleDelete = async (id) => {
     if (window.confirm("¿Seguro que deseas eliminar este producto?")) {
-      await deleteProduct(id);
-      fetchProducts();
+      await dispatch(removeProduct(id));
     }
-  }
+  };
 
+  const handleEdit = (prod) => {
+    navigate(`/formulario/${prod.id}`);
+  };
 
   return (
     <>
-      <h2>CRUD de Producto</h2>
-      <div className="container">
-        <div className="d-flex flex-row-reverse bd-highlight">
-          <Link to="/formulario" className="btn btn-primary" aria-current="page">
-          Nuevo
-          </Link>
-        </div>
-      </div>
-      <div className="container">
-        <table className="table">
-          <thead>
-            <tr>
-              <th scope="col">#3</th>
-              <th scope="col">Producto</th>
-              <th scope="col">Categoria</th>
-              <th scope="col">slug</th>
-              <th scope="col">Precio</th>
-              <th></th>
-            </tr>
-          </thead>
-          <tbody>
-            {products.map((prod) => (
+      <h2>Lista de productos</h2>
+      {loading && <div> Cargando...</div>}
+      <table className="table">
+        <tbody>
+          {products.map((prod, idx) => (
             <tr key={prod.id}>
-              <th scope="row">1</th>
+              {/* ... */}
+              <th scope="row">{idx + 1}</th>
               <td>{ prod.name }</td>
               <td>{ prod.categoryId }</td>
               <td>{ prod.slug }</td>
               <td>{ prod.price }</td>
               <td>
-                <button 
-                  onClick={() => editProduct(prod)}
-                  type="button" 
-                  className="btn btn-outline-warning me-2">
-                  Editar
-                </button>
-                <button 
-                  onClick={() => destroyProduct(prod.id)}
-                  type="button" 
-                  className="btn btn-outline-danger">
-                  Eliminar
-                </button>
+                <button onClick={() => handleEdit(prod)} className="btn btn-outline-warning me-2">Editar</button>
+                <button onClick={() => handleDelete(prod.id)} className="btn btn-outline-danger">Eliminar</button>
               </td>
-            </tr>              
-            ))}
-          </tbody>
-        </table>
-      </div>
+            </tr>
+          ))}
+        </tbody>
+      </table>
     </>
   );
+};
 
-
-
-}

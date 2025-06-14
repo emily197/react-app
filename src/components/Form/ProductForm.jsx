@@ -1,11 +1,11 @@
-import {Formik, Form, Field, ErrorMessage} from 'formik';
+import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
-import { addProduct, getProduct, updateProduct } from "../../helpers/getProduct";
 import { useEffect, useState } from "react";
 import { useParams, Link, useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { createProduct, editProduct, fetchProducts } from "../../store/productsSlice";
 
 const validationSchemaProduct = Yup.object({
-
   name: Yup.string()
     .max(20, 'Máximo 20 caracteres')
     .required('El nombre del producto es requerido'),
@@ -18,7 +18,7 @@ const validationSchemaProduct = Yup.object({
     .required('El slug es requerido'),
   image: Yup.string()
     .min(10, 'Minimo 10 caracteres')
-    .max(500, 'Máximo 100 caracteres')
+    .max(500, 'Máximo 500 caracteres')
     .required('La imagen es requerido'),
   shortDescription: Yup.string()
     .min(10, 'Minimo 10 caracteres')
@@ -26,8 +26,7 @@ const validationSchemaProduct = Yup.object({
     .required('La descripción corta es requerido'),
   longDescription: Yup.string()
     .min(10, 'Minimo 10 caracteres')
-    .max(200, 'Máximo 200 caracteres'),  
-
+    .max(200, 'Máximo 200 caracteres'),
   categoryId: Yup.string()
     .required('La categoría es requerida'),
   brand: Yup.string()
@@ -62,70 +61,59 @@ const validationSchemaProduct = Yup.object({
 export const ProductForm = () => {
   const { id } = useParams();
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
-  const  [initialValues, setInitialValues] = useState({
+  // Obtén productos del store
+  const products = useSelector(state => state.products.items);
+
+  // Busca el producto si es edición
+  const productToEdit = id ? products.find(p => String(p.id) === String(id)) : null;
+
+  const [initialValues, setInitialValues] = useState({
     name: '',
     barcode: '',
     slug: '',
     image: '',
     shortDescription: '',
     longDescription: '',
-    categoryId: 0,
-    brand: 0,
+    categoryId: '',
+    brand: '',
     price: '',
-    discountPrice: 0,
+    discountPrice: '',
     cost: '',
     stock: '',
-    unit: 0,
+    unit: '',
     isActive: true
   });
 
-
   useEffect(() => {
-    if (id) {
-      // Si existe id, cargar el producto para editar antes lo use para el slug xd 
-      const fetchProduct = async () => {
-        const products = await getProduct();
-        const found = products.find((p) => String(p.id) === String(id));
-        if (found) setInitialValues(found);
-      };
-      fetchProduct();
+    // Si no hay productos cargados, los traemos
+    if (products.length === 0) {
+      dispatch(fetchProducts());
     }
-  }, [id]);
+    // Si es edición y ya tenemos el producto, lo seteamos
+    if (id && productToEdit) {
+      setInitialValues(productToEdit);
+    }
+  }, [id, productToEdit, products.length, dispatch]);
 
   const onSubmitProduct = async (values, { setSubmitting, resetForm }) => {
     try {
       if (id) {
-        await updateProduct(id, values);
+        await dispatch(editProduct({ id, product: values })).unwrap();
         alert(`Producto actualizado: ${values.name}`);
       } else {
-        await addProduct(values);
+        await dispatch(createProduct(values)).unwrap();
         alert(`Producto registrado: ${values.name}`);
       }
       resetForm();
-      navigate("/admin"); //ruta admin 
+      navigate("/admin");
     } catch (e) {
       alert("Error al registrar/actualizar el producto");
     } finally {
       setSubmitting(false);
     }
   };
-  /*
-  const onSubmitProduct = async (values, {setSubmitting, resetForm}) => {
-    console.log('Datos del formulario', values)
-
-    try {
-      await postProduct(values);
-      alert('Producto registrado con éxito');
-      resetForm();
-    } catch (error) {
-      alert('Error al registrar el producto');
-    } finally {
-      setSubmitting(false);
-    }
-  } 
-
-  */
 
   return (
     <>
@@ -136,8 +124,8 @@ export const ProductForm = () => {
         validationSchema={validationSchemaProduct}
         onSubmit={onSubmitProduct}
       >
-        {({  isSubmitting, errors, touched, values, dirty, isValid  }) =>(
-        <Form>
+        {({ isSubmitting, errors, touched, values }) => (
+          <Form>
           <div className="mb-3">
             <label className="form-label">Nombre del producto</label>
             <Field
@@ -315,6 +303,7 @@ export const ProductForm = () => {
                 Producto activo
               </label>
             </div>
+          
           <button 
             type="submit" 
             className="btn btn-primary"
@@ -322,11 +311,9 @@ export const ProductForm = () => {
             <Link to="/admin" className="btn btn-secondary ms-2" aria-current="page">
               Cerrar
             </Link>
-          
-        </Form>
+          </Form>
         )}
-
       </Formik>
     </>
   );
-}
+};

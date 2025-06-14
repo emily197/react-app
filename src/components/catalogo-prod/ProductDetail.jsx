@@ -1,52 +1,36 @@
-import { useEffect, useState } from "react";
-import { useParams, Link } from "react-router-dom";
-import { getProduct } from "../../helpers/getProduct";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchProductBySlug, clearSelectedProduct } from "../../store/productsSlice";
+import { useEffect } from "react";
+import { useParams, Link  } from "react-router-dom";
 
 export const ProductDetail = () => {
   const {slug} = useParams();
-  const [product, setProduct] = useState(null);
+  const dispatch = useDispatch();
+  const { selectedProduct, loading } = useSelector(state => state.products);
 
   useEffect(() => {
-    if (slug) {
-      const fetchProduct = async () => {
-        try {
-          const products = await getProduct();
-          const foundProduct = products.find((p) => String(p.slug) === String(slug));
-          if (foundProduct) {
-            setProduct(foundProduct); 
-          } else {
-            setProduct(null); 
-          }
-        } catch (err) {
-          console.error("Error al obtener productos:", err);
-          setProduct(null);
-        }
-      };
-      fetchProduct();
-    }
-  }, [slug]);
-       
-  if(!product) {
-    return (
-      <h4>Producto no encontrado 404</h4>
-    );
-  }
+    dispatch(fetchProductBySlug(slug));
+    return () => dispatch(clearSelectedProduct());
+  }, [dispatch, slug]);
 
+
+  if (loading || !selectedProduct) return <div>Cargando...</div>;
+  
   return (
   <div className="container py-5">
   <div className="row g-4">
     <div className="col-md-6">
       <img
-            src={product.image}
-            alt={product.name}
+            src={selectedProduct.image}
+            alt={selectedProduct.name}
             className="img-fluid rounded shadow"
             style={{ maxHeight: 400, objectFit: "cover" }}
       />
     </div>
     <div className="col-md-6 d-flex flex-column justify-content-center">
-      <h2 className="fw-bold mb-3" style={{ color: "#025067" }}>{product.name}</h2>
-      <h4 className="mb-3" style={{ color: "#b31b6f" }}>{product.price} PEN</h4>
-      <p className="mb-4 text-muted">{product.longDescription || "Sin descripción."}</p>
+      <h2 className="fw-bold mb-3" style={{ color: "#025067" }}>{selectedProduct.name}</h2>
+      <h4 className="mb-3" style={{ color: "#b31b6f" }}>{selectedProduct.price} PEN</h4>
+      <p className="mb-4 text-muted">{selectedProduct.longDescription || "Sin descripción."}</p>
         <div>
           <button className="btn btn-primary me-2">Agregar al carrito</button>
           <Link to="/tienda" className="btn btn-outline-secondary">Volver al catálogo</Link>
@@ -56,13 +40,3 @@ export const ProductDetail = () => {
   </div>
   );
 }
-
-/*
-  useEffect(() => {
-    const fetchProduct = async () => {
-      const products = await getProduct();
-      const found = products.find((p) => p.slug === slug);
-      setProduct(found);
-    };
-    fetchProduct();
-  }, [slug]);*/

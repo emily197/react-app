@@ -1,41 +1,24 @@
-import { useEffect, useState } from "react";
-import { getProduct } from "../../helpers/getProduct";
-import { Link, useParams } from "react-router-dom";
+import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchProducts} from "../../store/productsSlice";
 import { Product } from "./Product";
 
+
 export const Catalogo = () => {
-  const [products, setProducts] = useState([]);
-  //const [slug] = useParams();
+  const dispatch = useDispatch();
 
-  
+  const { items: products, loading } = useSelector(state => state.products);
 
   useEffect(() => {
-    const fetchProducts = async () => {
-      try {
-        const data = await getProduct();
-        setProducts(data);
-      } catch (error) {
-        setProducts([]);
-      }
-    };
-    fetchProducts();
-  }, []);
-
-
-  /* modificacion 
-  useEffect(() => {
-    const fetchProducts = async () => {
-      const data = await getProduct();
-      setProducts(data);
-    };
-    fetchProducts();
-  }, []);*/
+    dispatch(fetchProducts());
+  }, [dispatch]);
 
   return (
     <div className="container py-5">
       <h2 className="mb-4 fw-bold text-center" style={{ color: "#025067" }}>
         Catálogo de Productos
       </h2>
+      {loading && <div> Cargando...</div>}
       <div className="row g-4">
         {products.map((product) => (
           <Product key={product.id} data={product}/>
