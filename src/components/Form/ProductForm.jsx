@@ -1,6 +1,8 @@
 import {Formik, Form, Field, ErrorMessage} from 'formik';
 import * as Yup from 'yup';
-import { postProduct } from '../../helpers/getProduct';
+import { addProduct, getProduct, updateProduct } from "../../helpers/getProduct";
+import { useEffect, useState } from "react";
+import { useParams, Link, useNavigate } from "react-router-dom";
 
 const validationSchemaProduct = Yup.object({
 
@@ -58,8 +60,10 @@ const validationSchemaProduct = Yup.object({
 });
 
 export const ProductForm = () => {
+  const { id } = useParams();
+  const navigate = useNavigate();
 
-  const initialValues = {
+  const  [initialValues, setInitialValues] = useState({
     name: '',
     barcode: '',
     slug: '',
@@ -74,8 +78,39 @@ export const ProductForm = () => {
     stock: '',
     unit: 0,
     isActive: true
-  }
+  });
 
+
+  useEffect(() => {
+    if (id) {
+      // Si existe id, cargar el producto para editar antes lo use para el slug xd 
+      const fetchProduct = async () => {
+        const products = await getProduct();
+        const found = products.find((p) => String(p.id) === String(id));
+        if (found) setInitialValues(found);
+      };
+      fetchProduct();
+    }
+  }, [id]);
+
+  const onSubmitProduct = async (values, { setSubmitting, resetForm }) => {
+    try {
+      if (id) {
+        await updateProduct(id, values);
+        alert(`Producto actualizado: ${values.name}`);
+      } else {
+        await addProduct(values);
+        alert(`Producto registrado: ${values.name}`);
+      }
+      resetForm();
+      navigate("/admin"); //ruta admin 
+    } catch (e) {
+      alert("Error al registrar/actualizar el producto");
+    } finally {
+      setSubmitting(false);
+    }
+  };
+  /*
   const onSubmitProduct = async (values, {setSubmitting, resetForm}) => {
     console.log('Datos del formulario', values)
 
@@ -88,22 +123,15 @@ export const ProductForm = () => {
     } finally {
       setSubmitting(false);
     }
-
-    /*
-    setTimeout(() => {
-        alert(`Mensaje enviado por:  ${values.name}`)
-        setSubmitting(false);
-
-        
-        resetForm();
-    },3000)*/
   } 
 
+  */
 
   return (
     <>
-      <h2>Formulario Producto</h2>
+      <h2>{id ? "Editar Producto" : "Crear Producto"}</h2>
       <Formik
+        enableReinitialize
         initialValues={initialValues}
         validationSchema={validationSchemaProduct}
         onSubmit={onSubmitProduct}
@@ -291,6 +319,10 @@ export const ProductForm = () => {
             type="submit" 
             className="btn btn-primary"
           >{isSubmitting ? 'Enviando...' : "Registrar" }</button>
+            <Link to="/admin" className="btn btn-secondary ms-2" aria-current="page">
+              Cerrar
+            </Link>
+          
         </Form>
         )}
 

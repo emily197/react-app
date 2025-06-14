@@ -33,10 +33,12 @@ export const MenuLateral = () => {
           </li>
 
           <li className="nav-item">
-            <Link to="/formulario" className="nav-link text-light" aria-current="page">
-              Formulario
+            <Link to="/admin" className="nav-link text-light" aria-current="page">
+              Crud Prod&nbsp; 
+              <span className="badge bg-success">Nuevo</span>
             </Link>
           </li>
+
 
         </ul>
 

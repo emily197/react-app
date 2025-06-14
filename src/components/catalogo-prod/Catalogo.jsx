@@ -7,13 +7,29 @@ export const Catalogo = () => {
   const [products, setProducts] = useState([]);
   //const [slug] = useParams();
 
+  
+
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const data = await getProduct();
+        setProducts(data);
+      } catch (error) {
+        setProducts([]);
+      }
+    };
+    fetchProducts();
+  }, []);
+
+
+  /* modificacion 
   useEffect(() => {
     const fetchProducts = async () => {
       const data = await getProduct();
       setProducts(data);
     };
     fetchProducts();
-  }, []);
+  }, []);*/
 
   return (
     <div className="container py-5">

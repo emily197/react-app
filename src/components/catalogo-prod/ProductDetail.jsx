@@ -2,23 +2,30 @@ import { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import { getProduct } from "../../helpers/getProduct";
 
-
 export const ProductDetail = () => {
-
   const {slug} = useParams();
   const [product, setProduct] = useState(null);
 
-
   useEffect(() => {
-    const fetchProduct = async () => {
-      const products = await getProduct();
-      const found = products.find((p) => p.slug === slug);
-      setProduct(found);
-    };
-    fetchProduct();
+    if (slug) {
+      const fetchProduct = async () => {
+        try {
+          const products = await getProduct();
+          const foundProduct = products.find((p) => String(p.slug) === String(slug));
+          if (foundProduct) {
+            setProduct(foundProduct); 
+          } else {
+            setProduct(null); 
+          }
+        } catch (err) {
+          console.error("Error al obtener productos:", err);
+          setProduct(null);
+        }
+      };
+      fetchProduct();
+    }
   }, [slug]);
-
-
+       
   if(!product) {
     return (
       <h4>Producto no encontrado 404</h4>
@@ -49,3 +56,13 @@ export const ProductDetail = () => {
   </div>
   );
 }
+
+/*
+  useEffect(() => {
+    const fetchProduct = async () => {
+      const products = await getProduct();
+      const found = products.find((p) => p.slug === slug);
+      setProduct(found);
+    };
+    fetchProduct();
+  }, [slug]);*/

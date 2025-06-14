@@ -14,4 +14,7 @@ If you are developing a production application, we recommend using TypeScript wi
 ### Correr proyecto
 ```
 npm run dev
+
+
+json-server --watch db.json --port 3000
 ```
