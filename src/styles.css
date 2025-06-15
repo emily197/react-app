@@ -12,3 +12,28 @@
   font-size: .875em;
   color: #dc3545;
 }
+/* Cart badge styles */
+.cart-badge {
+  position: absolute;
+  top: 2px;
+  right: 2px;
+  min-width: 22px;
+  height: 22px;
+  padding: 0 6px;
+  background: #b31b6f;
+  color: #fff;
+  border-radius: 50%;
+  font-size: 0.95rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid #fff;
+  box-shadow: 0 2px 6px #0002;
+  z-index: 2;
+  transition: background 0.2s;
+}
+.btn-outline-success:focus .cart-badge,
+.btn-outline-success:hover .cart-badge {
+  background: #6c0e42;
+}

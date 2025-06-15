@@ -231,6 +231,24 @@
       "stock": 100,
       "unit": "kg",
       "isActive": true
+    },
+    {
+      "id": "1",
+      "name": "zapatillas Urbanas",
+      "barcode": "CODE-002",
+      "slug": "prod-2",
+      "image": "https://flowbite.s3.amazonaws.com/docs/gallery/square/image-1.jpg",
+      "shortDescription": "",
+      "longDescription": "",
+      "categoryId": "ZAP",
+      "subcategoryId": "",
+      "brand": "MARCA-1",
+      "price": 230,
+      "discountPrice": 0,
+      "cost": 180,
+      "stock": 7,
+      "unit": "unit",
+      "isActive": true
     }
   ]
 }

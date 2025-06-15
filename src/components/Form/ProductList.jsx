@@ -27,6 +27,15 @@ export const ProductList = () => {
       <h2>Lista de productos</h2>
       {loading && <div> Cargando...</div>}
       <table className="table">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>NOMBRE</th>
+            <th>CATEGORIA</th>
+            <th>SLUG</th>
+            <th>PRECIO</th>
+          </tr>
+        </thead>
         <tbody>
           {products.map((prod, idx) => (
             <tr key={prod.id}>

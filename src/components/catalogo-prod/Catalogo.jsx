@@ -16,15 +16,16 @@ export const Catalogo = () => {
   return (
     <div className="container py-5">
       <h2 className="mb-4 fw-bold text-center" style={{ color: "#025067" }}>
-        Catálogo de Productos
+        Catálogo de Productos 
       </h2>
       {loading && <div> Cargando...</div>}
       <div className="row g-4">
-        {products.map((product) => (
-          <Product key={product.id} data={product}/>
+        {products.map((product, idx) => (
+          <Product key={product.id || idx}  data={product}/>
         ))}
         {products.length === 0 && (
           <div className="col-12 text-center text-muted py-5">
+            
             <div className="spinner-border text-primary mb-3" role="status"></div>
             <div>Cargando productos...</div>
           </div>
